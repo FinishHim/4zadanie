@@ -1,32 +1,84 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+<transition name="modal">
+<div class="wrapper">
+<div class="wrapper-content">
+<section>
+
+<div class="container">
+  
+<button class="btn btnPrimary" @click="modalFirst = !modalFirst">Show first modal</button>
+
+  <modals title="First modal" 
+  v-show="modalFirst" 
+  @close="modalFirst = false">
+  <div slot="body">
+<p>Text Text</p>
+<button class="btn btnPrimary" @click="modalFirst = !modalFirst">Well done</button>
+</div>
+  </modals>
+
+  <button class="btn btnPrimary" @click="modalSecond.show = !modalSecond.show">Show second modal</button>
+
+  <modals 
+  title="Modal with form" 
+  v-show="modalSecond.show" 
+  @close="modalSecond.show = false">
+  <div slot="body">
+<form @submit.prevent="submitSecondForm">
+  <label>Name:</label>
+  <input type="text" required v-model="modalSecond.name">
+  <label>Email:</label>
+  <input type="text" required v-model="modalSecond.email">
+<button class="btn btnPrimary" >Submit</button>
+</form>
+</div>
+  </modals>
+<button class="btn btnPrimary" @click="modalValidate = !modalValidate">Show second modal + validate</button>
+<modalValidate v-show="modalValidate" @close="modalValidate=false">
+    
+    
+
+</modalValidate>
+</div>
+</section>
+
+</div>
+</div>
+</transition>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
 
-#nav {
-  padding: 30px;
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+
+<script>
+import modals from'@/components/UI/Modal.vue'
+import modalValidate from'@/components/ModalValidate.vue'
+export default{
+components:{
+  modals , modalValidate
+},
+data(){
+  return{
+   modalFirst:false,
+   modalSecond:{
+     show:false,
+     name:'',
+     email:''
+   },
+   modalValidate:false
+  }
+},
+methods:{
+  submitSecondForm(){
+    console.log({
+      name: this.modalSecond.name ,
+      email: this.modalSecond.email
+    })
+    this.modalSecond.name =''
+    this.modalSecond.email=''
+    this.modalSecond.show=false
   }
 }
-</style>
+}
+</script>
